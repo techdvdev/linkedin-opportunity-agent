@@ -1,13 +1,9 @@
-
 name: LinkedIn Opportunity Monitor
 
 on:
   schedule:
     - cron: '0 9 * * *'  # Run daily at 9 AM UTC
   workflow_dispatch:  # Allow manual trigger
-
-yamlpermissions:
-  contents: write
 
 jobs:
   monitor:
@@ -29,39 +25,10 @@ jobs:
         
     - name: Test LinkedIn Agent
       run: |
-        python -c "
-        from linkedin_agent import LinkedInOpportunityAgent
-        
-        agent = LinkedInOpportunityAgent()
-        
-        # Test with sample posts
-        test_posts = [
-            'Looking for data visualization expert to create dashboards. Tableau experience needed.',
-            'Need React developer for web app project. Budget 5k, timeline 4 weeks.',
-            'Seeking mobile app developer for iOS/Android. Flutter preferred.'
-        ]
-        
-        print('LinkedIn Agent Test Results:')
-        print('=' * 40)
-        
-        for i, post in enumerate(test_posts, 1):
-            result = agent.analyze_post(post)
-            print(f'\\nPost {i}: {post[:50]}...')
-            print(f'Type: {result.opportunity_type.value}')
-            print(f'Confidence: {result.confidence_score:.2f}')
-            print(f'Urgency: {result.urgency_level.value}')
-            
-        print('\\n✅ Agent is working correctly!')
-        "
+        python linkedin_agent.py
         
     - name: Save Results
       run: |
         echo "Agent test completed on $(date)" >> test_log.txt
-        
-    - name: Commit results
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add test_log.txt
-        git diff --staged --quiet || git commit -m "Agent test results $(date)"
-        git push
+        echo "✅ Test results saved to test_log.txt"
+        cat test_log.txt
