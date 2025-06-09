@@ -6,6 +6,9 @@ on:
     - cron: '0 9 * * *'  # Run daily at 9 AM UTC
   workflow_dispatch:  # Allow manual trigger
 
+yamlpermissions:
+  contents: write
+
 jobs:
   monitor:
     runs-on: ubuntu-latest
